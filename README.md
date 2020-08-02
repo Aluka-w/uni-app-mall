@@ -132,6 +132,7 @@ uni-app实现商城 demo（app，小程序，h5）
 3. 样式
 
   ```css
+    // app 的时候时刻记得兼容状态栏的高度
     // --status-bar-height 为顶部高度
     // 条件编译 设置离顶部的高度
     /*  #ifdef  APP-PLUS  */
@@ -140,3 +141,7 @@ uni-app实现商城 demo（app，小程序，h5）
   ```
 
 4. 请求方法的封装
+
+5. 商品瀑布流布局
+
+6. tab实现
