@@ -84,11 +84,17 @@ export default {
     // 切换 tab
     handleSelect(index) {
       this.filterByList[index].selected = true;
-      for (let i = 0; i < filterByList.length; i++) {
+      for (let i = 0; i < this.filterByList.length; i++) {
         if (i !== index) {
           this.filterByList[i].selected = false;
         }
       }
+      //  请求数据
+      this.filterby = this.filterByList[index].filterby
+      this.page = 1;
+      this.loadingText = "加载中...";
+      this.goodsList = [];
+      this.loadData();
     },
     // 点击商品
     handleGoods(goods) {
@@ -100,8 +106,29 @@ export default {
         url: `${api.getGoodsList}/${this.filterby}/${this.page}/${this.size}`
       };
       const result = await this.request(params);
-      this.goodsList = result.data;
-    }
+      if (result.data.length > 0) {
+        result.data.forEach(item => {
+          this.goodsList.push(item)
+        })
+      } else {
+        this.loadingText = "我是有底线的..."
+      }
+    },
+    // 上拉加载
+		onReachBottom(){
+			this.page++;
+			this.loadData();
+		},
+    // 下拉刷新
+		onPullDownRefresh(){
+			setTimeout(() => {
+				this.page = 1;
+				this.loadingText = "加载中...";
+				this.goodsList = [];
+				this.loadData();
+				uni.stopPullDownRefresh();
+			},1000)
+		}
   }
 };
 </script>

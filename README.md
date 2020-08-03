@@ -109,6 +109,7 @@ uni-app实现商城 demo（app，小程序，h5）
 1. 沉浸式状态栏（非沉浸式）
 
       1. app 才有表示电量，手机信号等的状态栏，状态栏背景色与下面内容是否一致
+      2. 兼容的方法，一个盒子，fixed，z-index，top:0，放在状态栏位置底部，状态栏层级最高
 
 2. 取消系统默认顶部导航
 
@@ -140,8 +141,62 @@ uni-app实现商城 demo（app，小程序，h5）
     /*  #endif  */
   ```
 
-4. 请求方法的封装
+4. 请求方法的封装（参见 utils -> http.js）
 
 5. 商品瀑布流布局
 
+  ```html
+    <!-- 重点在图片固定宽，高度自适应 -->
+    <image mode="widthFix" :src="goods.img"></image>
+  ```
+
 6. tab实现
+
+  ```html
+    <!--  点击切换不同 index，然后生成样式 -->
+    <view
+      class="target"
+      v-for="(target, index) in filterByList"
+      :key="index"
+      :class="{ on: target.selected }"
+      @tap="handleSelect(index)"
+    >
+      {{ target.text }}
+    </view>
+  ```
+
+7. 下拉刷新，上拉加载的实现
+
+  - page.json 中配置开启下来刷新，其次在对应页面使用对应钩子即可
+  ```json
+    {
+      "pages": [
+        {
+          "path": "pages/goods/index",
+          "style": {
+            "navigationBarTitleText": "",
+            "onReachBottomDistance": 0, //  上拉刷新的距离
+            "enablePullDownRefresh": true // 下拉加载是否开启
+          }
+        }
+      ]
+    }
+  ```
+  
+  ```js
+    // 上拉加载
+    onReachBottom(){
+    	this.page++;
+    	this.loadData();
+    },
+    // 下拉刷新
+    onPullDownRefresh(){
+    	setTimeout(() => {
+    		this.page = 1;
+    		this.loadingText = "加载中...";
+    		this.goodsList = [];
+    		this.loadData();
+    		uni.stopPullDownRefresh();
+    	},1000)
+    }
+  ```

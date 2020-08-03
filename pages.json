@@ -34,7 +34,9 @@
     {
       "path": "pages/goods/index",
       "style": {
-        "navigationBarTitleText": ""
+        "navigationBarTitleText": "",
+        "onReachBottomDistance": 0, //  上拉刷新的距离
+        "enablePullDownRefresh": true // 下拉加载是否开启
       }
     }
   ],
